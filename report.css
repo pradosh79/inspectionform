@@ -1,0 +1,126 @@
+body{
+  background:#F2F0E9;
+  font-family:Arial, Helvetica, sans-serif;
+  color:#222;
+  margin:0;
+  padding:20px 10px 60px;
+}
+.rp-sheet{
+  max-width:760px;
+  margin:0 auto 28px;
+  background:#fff;
+  border:2px solid #2E7D32;
+  outline:1px solid #2E7D32;
+  outline-offset:4px;
+  padding:26px 24px;
+  box-sizing:border-box;
+  position:relative;
+  counter-increment:rp-page;
+}
+.rp-sheet::after{
+  content:counter(rp-page);
+  position:absolute;
+  bottom:10px;
+  right:16px;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:11px;
+  color:#999;
+}
+.rp-sheet.no-pagenum::after{
+  content:none;
+}
+body{
+  counter-reset:rp-page;
+}
+.rp-letterhead{
+  text-align:center;
+  margin-bottom:18px;
+}
+.rp-company{
+  font-size:24px;
+  font-weight:bold;
+  color:#2E7D32;
+  margin-bottom:4px;
+}
+.rp-companyline{
+  font-size:12.5px;
+  color:#222;
+  line-height:1.5;
+}
+.rp-h2{
+  font-size:19px;
+  margin:0 0 6px;
+}
+.rp-field{
+  margin:9px 0;
+  font-size:14px;
+}
+.rp-label{
+  font-weight:bold;
+}
+.rp-box{
+  border:1px solid #999;
+  min-height:34px;
+  padding:8px 10px;
+  margin-top:4px;
+  font-size:14px;
+}
+.rp-row{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:10px;
+  font-size:14px;
+  margin-top:10px;
+}
+.rp-underline{
+  display:inline-block;
+  min-width:46px;
+  border-bottom:1px solid #333;
+  padding:0 4px;
+  font-weight:bold;
+}
+.rp-area-header{
+  display:grid;
+  grid-template-columns:1fr 90px 90px;
+  font-size:14px;
+  margin-top:16px;
+  padding-bottom:4px;
+}
+.rp-area-row{
+  display:grid;
+  grid-template-columns:1fr 90px 90px;
+  align-items:center;
+  font-size:14px;
+  padding:7px 0;
+  border-bottom:1px solid #eee;
+}
+.rp-area-name{}
+.rp-area-check{
+  text-align:center;
+  color:#2E7D32;
+  font-weight:bold;
+}
+.rp-note{
+  font-size:12.5px;
+  font-style:italic;
+  color:#555;
+  margin-top:14px;
+}
+.rp-option{
+  font-size:13.5px;
+  margin:8px 0;
+}
+.rp-radio{
+  color:#2E7D32;
+  font-weight:bold;
+}
+@media (max-width:600px){
+  .rp-sheet{ padding:18px 14px; outline-offset:2px; }
+  .rp-company{ font-size:19px; }
+  .rp-area-header, .rp-area-row{ grid-template-columns:1fr 60px 60px; }
+}
+@media print{
+  body{ background:#fff; padding:0; }
+  .rp-sheet{ border:2px solid #2E7D32; outline:none; margin-bottom:0; page-break-after:always; }
+}

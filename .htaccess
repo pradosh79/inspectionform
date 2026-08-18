@@ -1,0 +1,14 @@
+# No longer using Basic Auth -- login is handled via the MySQL-backed
+# login system (login.php) instead. This file now just hardens the folder.
+
+Options -Indexes
+
+<FilesMatch "^(config\.php|auth\.php|smtp_mailer\.php|pdf_generate\.php|report_render\.php|report_letterhead\.php|schema\.sql)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order deny,allow
+    Deny from all
+  </IfModule>
+</FilesMatch>
