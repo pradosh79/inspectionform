@@ -1,12 +1,20 @@
 <?php
-// Database connection settings.
-// Fill these in with the credentials your web host / MySQL server gives you.
-$DB_HOST = '127.0.0.1:3306';
-$DB_NAME = 'u533806958_inspectionform';
-$DB_USER = 'u533806958_inspectionform';
-$DB_PASS = '1ino1$vzH~';
+// Database + app settings.
+// On Railway (and any modern host) credentials come from ENVIRONMENT
+// VARIABLES, never hardcoded. Set these in your Railway service ->
+// "Variables" tab. When you add a Railway MySQL database, Railway
+// injects MYSQLHOST / MYSQLPORT / MYSQLUSER / MYSQLPASSWORD / MYSQL_DATABASE
+// automatically -- the getenv() fallbacks below pick those up.
 
-$conn = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
+$DB_HOST = getenv('DB_HOST') ?: getenv('MYSQLHOST') ?: '127.0.0.1';
+$DB_PORT = (int)(getenv('DB_PORT') ?: getenv('MYSQLPORT') ?: 3306);
+$DB_NAME = getenv('DB_NAME') ?: getenv('MYSQL_DATABASE') ?: getenv('MYSQLDATABASE') ?: 'inspectionform';
+$DB_USER = getenv('DB_USER') ?: getenv('MYSQLUSER') ?: 'root';
+$DB_PASS = getenv('DB_PASS') ?: getenv('MYSQLPASSWORD') ?: '';
+
+// NOTE: host and port are passed SEPARATELY. Do not glue ":3306" onto
+// the host string -- mysqli does not parse a port out of the host.
+$conn = mysqli_connect($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME, $DB_PORT);
 
 if (!$conn) {
     http_response_code(500);
@@ -17,25 +25,18 @@ if (!$conn) {
 
 mysqli_set_charset($conn, 'utf8mb4');
 
-// Email routing for the "Share with Email" action:
-// - The end-user (recipient typed into the form) gets ONLY the certificate.
-// - ADMIN_EMAIL (office admin) gets ONLY the full 3-page report.
-// - CLIENT_EMAIL (you / the business owner) gets BOTH attachments.
-$ADMIN_EMAIL  = 'tirtha_big@yahoo.com';       // <-- office admin's real address
-$CLIENT_EMAIL = 'pradosh.bargad@gmail.com';  // <-- your own address
+// ---- Email routing (also moved to env vars) ----
+$ADMIN_EMAIL  = getenv('ADMIN_EMAIL')  ?: 'tirtha_big@yahoo.com';
+$CLIENT_EMAIL = getenv('CLIENT_EMAIL') ?: 'pradosh.bargad@gmail.com';
 
-// SMTP settings for sending mail. PHP's built-in mail() function is
-// disabled/unreliable on most hosts (including Hostinger), so mail is
-// sent through an authenticated SMTP connection instead.
-// These are almost always the SAME as the mailbox login you use in
-// Outlook/webmail for this address (e.g. james@adinspections.com).
-$SMTP_HOST       = 'smtp.gmail.com';
-$SMTP_PORT       = 587;
-$SMTP_ENCRYPTION = 'tls';   // ← matches port 587
-$SMTP_USERNAME   = 'gregory.mcneely70@gmail.com';
-$SMTP_PASSWORD   = 'mueo piqo vgzn cdqo';    // <-- the real mailbox password
+// ---- SMTP (secrets from env; NEVER hardcode) ----
+$SMTP_HOST       = getenv('SMTP_HOST')       ?: 'smtp.gmail.com';
+$SMTP_PORT       = (int)(getenv('SMTP_PORT') ?: 587);
+$SMTP_ENCRYPTION = getenv('SMTP_ENCRYPTION') ?: 'tls';
+$SMTP_USERNAME   = getenv('SMTP_USERNAME')   ?: '';
+$SMTP_PASSWORD   = getenv('SMTP_PASSWORD')   ?: '';   // set in Railway Variables
 
-// Company letterhead, reused on the report view and in the email.
+// ---- Company letterhead ----
 $COMPANY_NAME    = 'A & D INSPECTIONS, LLC';
 $COMPANY_ADDRESS = '16918 Rolling Acres Dr.  Humble, TX. 77396';
 $COMPANY_PHONE   = '281-802-0247';
